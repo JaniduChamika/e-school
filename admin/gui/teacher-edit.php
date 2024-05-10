@@ -1,0 +1,609 @@
+<?php
+session_start();
+
+require "../../connection/connection.php";
+// check admin is loged 
+if (isset($_SESSION["admin"])) {
+
+if (isset($_GET["uid"])) {
+      $uid = $_GET["uid"];
+      $result = DB::search("SELECT * FROM `teachers` WHERE `uid`='" . $uid . "'");
+      if ($result->num_rows == 1) {
+?>
+            <!DOCTYPE html>
+
+            <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../assets/" data-template="vertical-menu-template-free">
+
+            <head>
+                  <meta charset="utf-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+                  <title>Admin | Edit Teacher Info</title>
+
+                  <?php
+                  require "headLink.php";
+                  ?>
+                  <link rel="stylesheet" href="../../css/jquery.imageResizer.css" />
+
+            </head>
+
+            <body>
+                  <!-- Layout wrapper -->
+                  <div class="layout-wrapper layout-content-navbar">
+                        <div class="layout-container">
+                              <!-- Menu -->
+
+                              <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+                                    <?php
+                                    require "adminSidebar.php";
+                                    ?>
+
+                              </aside>
+                              <!-- / Menu -->
+
+                              <!-- Layout container -->
+                              <div class="layout-page">
+                                    <!-- Navbar -->
+
+                                    <?php
+                                    require "navbar.php";
+                                    ?>
+                                    <!-- / Navbar -->
+
+                                    <!-- Content wrapper -->
+                                    <div class="content-wrapper">
+                                          <!-- Content -->
+
+                                          <div class="container-xxl flex-grow-1 container-p-y">
+                                                <div class="row">
+                                                      <div class="col-12 ">
+                                                            <div class="card mb-4">
+                                                                  <div class="card-header d-flex align-items-center justify-content-between">
+                                                                        <h5 class="mb-0">Edit Teacher Info</h5>
+                                                                        <!-- <small class="text-muted float-end">Merged input group</small> -->
+                                                                  </div>
+                                                                  <div class="card-body">
+                                                                        <div class="row">
+                                                                              <div class="col-12 text-center " id="imageviewbox">
+                                                                                    <label for="selectImage3" onclick="done();">
+                                                                                          <?php
+                                                                                          $data = $result->fetch_assoc();
+                                                                                          if (empty($data["path"])) {
+                                                                                          ?>
+                                                                                                <div class="serviceImageBox mb-2" id="viewImage3" style="background-image: url('../../image/profile/teacher-default.png');">
+
+                                                                                                <?php
+                                                                                          } else {
+                                                                                                ?>
+                                                                                                      <div class="serviceImageBox mb-2" id="viewImage3" style="background-image: url('../../image/profile/<?php echo $data["path"] ?>');">
+
+                                                                                                      <?php
+                                                                                                }
+                                                                                                      ?>
+                                                                                                      <input type="file" class="d-none" accept=".png, .jpg, .jpeg" id="selectImage3" />
+
+                                                                                                      </div>
+                                                                                    </label>
+
+
+                                                                              </div>
+                                                                              <div class="col-12  d-none mb-2" id="cropbox">
+                                                                                    <div class="position-relative mx-auto mb-2" id="fullimagebox" style="height: 330px; width: 415px;">
+                                                                                          <div id="contain" style="position:absolute; width:100%;height:100%;">
+
+                                                                                          </div>
+
+                                                                                    </div>
+                                                                                    <div class="w-100 text-center">
+
+                                                                                          <button class="resize-done btn btn-info py-2 px-4 fs-6">Done</button>
+
+                                                                                    </div>
+                                                                              </div>
+
+
+                                                                              <!-- user details  -->
+                                                                              <div class="col-12">
+                                                                                    <div class="row">
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="fname">First Name</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge border-danger">
+                                                                                                                  <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                                                                                                  <input type="text" class="form-control" value="<?php echo $data["fname"] ?>" id="fname" placeholder="John">
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="lname">Last Name</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                                                                                                  <input type="text" class="form-control" id="lname" value="<?php echo $data["lname"] ?>" placeholder="Mechel">
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="nametag">Name with initial</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                                                                                                  <input type="text" class="form-control" value="<?php echo $data["fulname"] ?>" onkeyup="this.value = this.value.toUpperCase();" id="nametag" placeholder="A.B.J MECHEL">
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="usernametag">Username</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-user-circle'></i></span>
+                                                                                                                  <input type="text" class="form-control" readonly="" value="<?php echo $data["username"] ?>" onkeyup="this.value = this.value.toUpperCase();" id="usernametag" placeholder="AD/ABJ/0001" aria-label="John Doe">
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="emailtag">Email</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                                                                                                                  <input type="text" id="emailtag" class="form-control" value="<?php echo $data["email"] ?>" placeholder="example@gmail.com">
+
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="phonetag">Phone No</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class="bx bx-phone"></i></span>
+                                                                                                                  <input type="text" id="phonetag" value="<?php echo $data["contact"] ?>" class="form-control phone-mask" placeholder="07# 7777 8###">
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+
+                                                                                          <div class="col-12 col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="nictag">National ID</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-credit-card-alt'></i></span>
+                                                                                                                  <input type="text" id="nictag" value="<?php echo $data["nic_no"] ?>" class="form-control phone-mask" placeholder="200*******09">
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="basic-icon-default-phone">Gander</label>
+                                                                                                      <div class="col-md-8 col-xxl-9 ">
+                                                                                                            <div class="input-group input-group-merge ps-2">
+                                                                                                                  <?php
+                                                                                                                  if ($data["gen"] == "Male") {
+                                                                                                                  ?>
+                                                                                                                        <div class="form-check mt-1 me-3">
+                                                                                                                              <input name="ganeder" class="form-check-input" checked="" type="radio" value="1" id="ganderradiomale">
+                                                                                                                              <label class="form-check-label" for="ganderradiomale"><i class='bx bx-male-sign'></i> Male </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-check mt-1">
+                                                                                                                              <input name="ganeder" class="form-check-input" type="radio" value="2" id="ganderradiofe">
+                                                                                                                              <label class="form-check-label" for="ganderradiofe"><i class='bx bx-female-sign'></i> Female </label>
+                                                                                                                        </div>
+                                                                                                                  <?php
+                                                                                                                  } else {
+                                                                                                                  ?>
+                                                                                                                        <div class="form-check mt-1 me-3">
+                                                                                                                              <input name="ganeder" class="form-check-input" type="radio" value="1" id="ganderradiomale">
+                                                                                                                              <label class="form-check-label" for="ganderradiomale"><i class='bx bx-male-sign'></i> Male </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-check mt-1">
+                                                                                                                              <input name="ganeder" class="form-check-input" checked="" type="radio" value="2" id="ganderradiofe">
+                                                                                                                              <label class="form-check-label" for="ganderradiofe"><i class='bx bx-female-sign'></i> Female </label>
+                                                                                                                        </div>
+                                                                                                                  <?php
+                                                                                                                  }
+                                                                                                                  ?>
+
+
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="dobtag">DOB</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-calendar-heart'></i></span>
+                                                                                                                  <input type="date" id="dobtag" value="<?php echo $data["dob"] ?>" class="form-control phone-mask" placeholder="200*******09">
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="Religious ">Religious </label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span id="basic-icon-default-phone2" class="input-group-text"><i class='bx bx-world'></i></span>
+
+                                                                                                                  <select id="Religious " class="form-select">
+                                                                                                                        <option value="0">Select Religion</option>
+                                                                                                                        <?php
+
+                                                                                                                        $reult = DB::search("SELECT * FROM `religious`");
+
+                                                                                                                        for ($i = 0; $i < $reult->num_rows; $i++) {
+                                                                                                                              $d = $reult->fetch_assoc();
+                                                                                                                              if ($data["religion"] == $d["religion"]) {
+                                                                                                                        ?>
+                                                                                                                                    <option value="<?php echo $d["rid"] ?>" selected><?php echo $d["religion"] ?></option>
+
+                                                                                                                              <?php
+                                                                                                                              } else {
+                                                                                                                              ?>
+                                                                                                                                    <option value="<?php echo $d["rid"] ?>"><?php echo $d["religion"] ?></option>
+
+                                                                                                                        <?php
+                                                                                                                              }
+                                                                                                                        }
+                                                                                                                        ?>
+                                                                                                                  </select>
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="addresstag">Address</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-home-circle'></i></span>
+
+                                                                                                                  <input type="text" id="addresstag" value="<?php echo $data["address_line"] ?>" class="form-control phone-mask" placeholder="Address No, Street 01, Street 02">
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="provincetag">Province</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-map-alt'></i></span>
+
+                                                                                                                  <select id="provincetag" onchange="loaderAddres('district');" class="form-select">
+                                                                                                                        <option value="0">Select Province</option>
+                                                                                                                        <?php
+
+                                                                                                                        $reult = DB::search("SELECT * FROM `province`");
+
+                                                                                                                        for ($i = 0; $i < $reult->num_rows; $i++) {
+                                                                                                                              $d = $reult->fetch_assoc();
+                                                                                                                              if ($data["province"] == $d["pname_en"]) {
+                                                                                                                        ?>
+                                                                                                                                    <option value="<?php echo $d["pid"] ?>" selected><?php echo $d["pname_en"] ?></option>
+
+                                                                                                                              <?php
+                                                                                                                              } else {
+                                                                                                                              ?>
+                                                                                                                                    <option value="<?php echo $d["pid"] ?>"><?php echo $d["pname_en"] ?></option>
+
+                                                                                                                        <?php
+                                                                                                                              }
+                                                                                                                        }
+                                                                                                                        ?>
+                                                                                                                  </select>
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="districtag">District</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-map-pin'></i></span>
+
+                                                                                                                  <select id="districtag" onchange="loaderAddres('city');" class="form-select">
+                                                                                                                        <option value="0">Select District</option>
+                                                                                                                        <?php
+
+                                                                                                                        $reult = DB::search("SELECT * FROM `district`");
+
+                                                                                                                        for ($i = 0; $i < $reult->num_rows; $i++) {
+                                                                                                                              $d = $reult->fetch_assoc();
+                                                                                                                              if ($data["district"] == $d["dname_en"]) {
+
+                                                                                                                        ?>
+                                                                                                                                    <option value="<?php echo $d["did"] ?>" selected><?php echo $d["dname_en"] ?></option>
+                                                                                                                              <?php
+                                                                                                                              } else {
+                                                                                                                              ?>
+                                                                                                                                    <option value="<?php echo $d["did"] ?>"><?php echo $d["dname_en"] ?></option>
+
+                                                                                                                        <?php
+                                                                                                                              }
+                                                                                                                        }
+                                                                                                                        ?>
+                                                                                                                  </select>
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="citytag">City</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bx-map'></i></span>
+
+                                                                                                                  <select id="citytag" onchange="loaderAddres('postal');" class="form-select">
+                                                                                                                        <option value="0">Select City</option>
+                                                                                                                        <?php
+
+                                                                                                                        $reult = DB::search("SELECT * FROM `city`");
+
+                                                                                                                        for ($i = 0; $i < $reult->num_rows; $i++) {
+                                                                                                                              $d = $reult->fetch_assoc();
+                                                                                                                              if ($data["city"] == $d["cname_en"]) {
+
+                                                                                                                        ?>
+                                                                                                                                    <option value="<?php echo $d["cid"] ?>" selected><?php echo $d["cname_en"] ?></option>
+                                                                                                                              <?php
+                                                                                                                              } else {
+                                                                                                                              ?>
+                                                                                                                                    <option value="<?php echo $d["cid"] ?>"><?php echo $d["cname_en"] ?></option>
+
+                                                                                                                        <?php
+                                                                                                                              }
+                                                                                                                        }
+                                                                                                                        ?>
+                                                                                                                  </select>
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-12 col-md-6">
+                                                                                                <div class="row mb-3">
+
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label " for="postalcodetag">Postal Code</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <span class="input-group-text"><i class='bx bxs-edit-location'></i></span>
+                                                                                                                  <input type="text" id="postalcodetag" value="<?php echo $data["postcode"] ?>" class="form-control phone-mask" placeholder="11222">
+
+                                                                                                            </div>
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                    </div>
+
+                                                                              </div>
+                                                                              <!-- / user details  -->
+                                                                              <div class="col-12">
+                                                                                    <div class="row">
+
+                                                                                          <div class="col-md-6">
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="basic-icon-default-fullname">Grade(s)</label>
+                                                                                                      <div class="col-md-8 col-xxl-9 ">
+
+                                                                                                            <div class="row gy-1">
+
+                                                                                                                  <?php
+                                                                                                                  $grade = DB::search("SELECT * FROM `grade`");
+                                                                                                                  $g15 = "0";
+                                                                                                                  $g69 = "0";
+                                                                                                                  $g1011 = "0";
+                                                                                                                  $g1213 = "0";
+                                                                                                                  for ($i = 0; $i < $grade->num_rows; $i++) {
+                                                                                                                        $d = $grade->fetch_assoc();
+                                                                                                                        $havedate = DB::search("SELECT * FROM `teacher_has_grade` WHERE `user_uid`='" . $uid . "' AND `grade_gid`='" . $d["gid"] . "'");
+
+                                                                                                                        if ($havedate->num_rows == 1) {
+                                                                                                                              if ($d["gname"] <= 5) {
+                                                                                                                                    $g15 = "15";
+                                                                                                                              }
+                                                                                                                              if ($d["gname"] >= 6 && $d["gname"] <= 9) {
+                                                                                                                                    $g69 = "69";
+                                                                                                                              }
+                                                                                                                              if ($d["gname"] >= 10 && $d["gname"] <= 11) {
+                                                                                                                                    $g1011 = "1011";
+                                                                                                                              }
+                                                                                                                              if ($d["gname"] >= 12) {
+                                                                                                                                    $g1213 = "1213";
+                                                                                                                              }
+
+                                                                                                                  ?>
+                                                                                                                              <input type="checkbox" class="btn-check gradeTec  w-auto" checked="" name="<?php echo $d["gname"] ?>" onchange=" getRelevantSubEdit(<?php echo  $uid  ?>);" value="<?php echo $d["gid"] ?>" id="grade<?php echo $i + 1 ?>">
+                                                                                                                              <label class="btn btn-sm btn-outline-info w-auto me-1" for="grade<?php echo $i + 1 ?>"><?php echo $d["gname"] ?></label>
+                                                                                                                        <?php
+                                                                                                                        } else {
+                                                                                                                        ?>
+                                                                                                                              <input type="checkbox" class="btn-check gradeTec  w-auto" name="<?php echo $d["gname"] ?>" onchange=" getRelevantSubEdit(<?php echo  $uid  ?>);" value="<?php echo $d["gid"] ?>" id="grade<?php echo $i + 1 ?>">
+                                                                                                                              <label class="btn btn-sm btn-outline-info w-auto me-1" for="grade<?php echo $i + 1 ?>"><?php echo $d["gname"] ?></label>
+                                                                                                                  <?php
+                                                                                                                        }
+                                                                                                                  }
+                                                                                                                  ?>
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                          <div class="col-md-6">
+
+                                                                                                <div class="row mb-3">
+                                                                                                      <label class="col-md-4 col-xxl-3 col-form-label" for="basic-icon-default-fullname">Subject(s)</label>
+                                                                                                      <div class="col-md-8 col-xxl-9">
+                                                                                                            <div class="input-group input-group-merge">
+                                                                                                                  <div class="col-md" id="subject-viewer">
+
+                                                                                                                        <?php
+                                                                                                                        $subject = DB::search("SELECT * FROM `allsubject` WHERE `sub_grade_type` IN ($g15,$g69,$g1011,$g1213) ");
+
+                                                                                                                        for ($i = 0; $i < $subject->num_rows; $i++) {
+                                                                                                                              $d = $subject->fetch_assoc();
+                                                                                                                              $sub = DB::search("SELECT * FROM `teacher_has_subject` WHERE `user_uid`='" . $uid . "' AND `subject_id`='" . $d["sub_id"] . "'");
+                                                                                                                              if ($sub->num_rows == 1) {
+                                                                                                                        ?>
+                                                                                                                                    <div class="form-check form-check-inline">
+                                                                                                                                          <input class="form-check-input subjectTec" checked="" value="<?php echo $d["sub_id"] ?>" type="checkbox" id="subject<?php echo $i + 1 ?>">
+                                                                                                                                          <label class="form-check-label" for="subject<?php echo $i + 1 ?>"><?php echo $d["sub_name"] ?></label>
+                                                                                                                                    </div>
+                                                                                                                              <?php
+                                                                                                                              } else {
+                                                                                                                              ?>
+                                                                                                                                    <div class="form-check form-check-inline">
+                                                                                                                                          <input class="form-check-input subjectTec" value="<?php echo $d["sub_id"] ?>" type="checkbox" id="subject<?php echo $i + 1 ?>">
+                                                                                                                                          <label class="form-check-label" for="subject<?php echo $i + 1 ?>"><?php echo $d["sub_name"] ?></label>
+                                                                                                                                    </div>
+                                                                                                                        <?php
+                                                                                                                              }
+                                                                                                                        }
+                                                                                                                        ?>
+                                                                                                                  </div>
+                                                                                                            </div>
+
+                                                                                                      </div>
+                                                                                                </div>
+                                                                                          </div>
+                                                                                    </div>
+                                                                              </div>
+                                                                        </div>
+
+
+                                                                        <div class="row">
+                                                                              <div class="col-12 ">
+                                                                                    <div class="alert alert-danger alert-dismissible d-none" id="errormsg" role="alert">
+
+
+                                                                                    </div>
+                                                                              </div>
+                                                                              <div class="col-12 text-end">
+                                                                                    <button type="submit" class="btn btn-info" onclick="updateUser('teacher',<?php echo $uid ?>);">Save</button>
+                                                                              </div>
+                                                                        </div>
+
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+
+                                          </div>
+                                          <!-- / Content -->
+
+                                          <!-- Footer -->
+                                          <footer class="content-footer footer bg-footer-theme">
+                                                <?php
+                                                require "footer.php";
+                                                ?>
+                                          </footer>
+                                          <!-- / Footer -->
+
+                                          <div class="content-backdrop fade"></div>
+
+
+
+
+                                    </div>
+
+                                    <!-- Content wrapper -->
+                              </div>
+                              <!-- / Layout page -->
+
+                        </div>
+
+                        <!-- Overlay -->
+                        <div class="layout-overlay layout-menu-toggle"></div>
+
+                  </div>
+                  <!-- / Layout wrapper -->
+
+
+                  <!-- Core JS -->
+                  <!-- build:js assets/vendor/js/core.js -->
+                  <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+                  <script src="../../assets/vendor/libs/popper/popper.js"></script>
+                  <script src="../../assets/vendor/js/bootstrap.js"></script>
+                  <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+                  <script src="../../assets/vendor/js/menu.js"></script>
+                  <!-- endbuild -->
+
+
+                  <!-- Main JS -->
+                  <script src="../../assets/js/main.js"></script>
+
+
+                  <!-- Place this tag in your head or just before your close body tag. -->
+                  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+                  <!-- my java script  -->
+                  <script src="../../js/script.js"></script>
+                  <script type="text/javascript" src="../../js/jquery.min.js"></script>
+                  <script type="text/javascript" src="../../js/jquery.imageResizer.js"></script>
+                  <script type="text/javascript" src="../js/admin.js"></script>
+
+            </body>
+
+            </html>
+      <?php
+      } else {
+      ?>
+            <script>
+                  window.location = "../../misc/pages-404.php";
+            </script>
+      <?php
+      }
+} else {
+      ?>
+      <script>
+            window.location = "../../misc/pages-404.php";
+      </script>
+<?php
+}
+
+}else{
+    ?>
+<script>
+    window.location="../../login/gui/admin-login.php";
+</script>
+    <?php
+}
+?>
