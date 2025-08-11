@@ -92,16 +92,16 @@ A comprehensive web-based learning management system designed to facilitate onli
 Comprehensive user manuals are available for each user role:
 
 ### 📘 Administrator Manual
-**File**: [`doc/Administrator_Manual.pdf`](docs/user-manual/Admin-Manual.pdf)
+**File**: [`doc/Administrator_Manual.pdf`](doc/user-manual/Admin-Manual.pdf)
 
 ### 📗 Teacher Manual
-**File**: [`doc/Teacher_Manual.pdf`](docs/user-manual/Teacher-Manual.pdf)
+**File**: [`doc/Teacher_Manual.pdf`](doc/user-manual/Teacher-Manual.pdf)
 
 ### 📙 Student Manual
-**File**: [`doc/Student_Manual.pdf`](docs/user-manual/Student-Manual.pdf)
+**File**: [`doc/Student_Manual.pdf`](doc/user-manual/Student-Manual.pdf)
 
 ### 📕 Academic Officer Manual
-**File**: [`doc/Academic_Officer_Manual.pdf`](docs/user-manual/Academic-Officer-Manual.pdf)
+**File**: [`doc/Academic_Officer_Manual.pdf`](doc/user-manual/Academic-Officer-Manual.pdf)
 
 ## 🔐 Security Features
 
@@ -178,4 +178,5 @@ For technical support or questions:
 - 🚫 Direct access to system files is blocked via .htaccess
 
 **Made with ❤️ for the education community**
+
 
