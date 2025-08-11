@@ -6,7 +6,7 @@ class DB
       public static function connect()
       {
             if (!isset($dbms)) {
-                  DB::$dbms = new mysqli("localhost", "root", "@JaniduChamika2001", "eschool", "3306");
+                  DB::$dbms = new mysqli("localhost", "root", "password", "eschool", "3306");
             }
       }
 
@@ -22,3 +22,4 @@ class DB
             return $resultset;
       }
 }
+
